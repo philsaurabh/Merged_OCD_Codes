@@ -49,8 +49,8 @@ public class VideoGalleryFolders extends AppCompatActivity {
             @Override
             public void onPostExecute() {
                 super.onPostExecute();
-                VideoGalleryAdapter adapter = new VideoGalleryAdapter(getApplicationContext(), videoFolderArrayList);
-                recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+                VideoGalleryAdapter adapter = new VideoGalleryAdapter(VideoGalleryFolders.this, videoFolderArrayList);
+                recyclerView.setLayoutManager(new GridLayoutManager(VideoGalleryFolders.this, 3));
                 recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
             }
@@ -79,6 +79,9 @@ public class VideoGalleryFolders extends AppCompatActivity {
             do {
                 String folderName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
                 String dataPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                if(dataPath.lastIndexOf(folderName + "/")<=0) {
+                    continue;
+                }
                 String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
                 folderPaths += folderName + "/";
                 Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
@@ -109,7 +112,6 @@ public class VideoGalleryFolders extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         } finally {
             cursor.close();
         }

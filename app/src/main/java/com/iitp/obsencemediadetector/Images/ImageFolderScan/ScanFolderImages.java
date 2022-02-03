@@ -217,7 +217,7 @@ public class ScanFolderImages extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         long timeDiff = endMilliSec - startMilliSec;
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), scannedImagesArrayList.size() + " images scanned in " + timeDiff + " milliseconds" + "\n" +obsceneImageList.size() + " obscene Images found", Toast.LENGTH_LONG).show();
+        Toast.makeText(ScanFolderImages.this, scannedImagesArrayList.size() + " images scanned in " + timeDiff + " milliseconds" + "\n" +obsceneImageList.size() + " obscene Images found", Toast.LENGTH_LONG).show();
     }
 
     public ArrayList<PictureFacer> getAllImagesByFolder(String path){

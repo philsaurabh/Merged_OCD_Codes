@@ -71,7 +71,7 @@ public class SingleVideoScanning extends AppCompatActivity {
     private void SetData() {
         Log.d(TAG, "GetObsceneResult SetData: Size: " + scannedVideoImagesArrayList.size());
         if (scannedVideoImagesArrayList.size() == 0) {
-            Toast.makeText(getApplicationContext(), "No Obscenity detected in the video", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SingleVideoScanning.this, "No Obscenity detected in the video", Toast.LENGTH_SHORT).show();
         } else {
             SingleVideoFramesAdapter adapter = new SingleVideoFramesAdapter(this, scannedVideoImagesArrayList);
             recyclerView.setAdapter(adapter);
@@ -90,7 +90,7 @@ public class SingleVideoScanning extends AppCompatActivity {
             retriever.setDataSource(this, videoUri);
             time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Err: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SingleVideoScanning.this, "Err: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         long DurationMilliSecond = 0;

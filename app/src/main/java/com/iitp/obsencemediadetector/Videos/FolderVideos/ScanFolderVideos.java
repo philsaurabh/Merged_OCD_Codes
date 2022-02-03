@@ -27,6 +27,7 @@ import com.gkemon.XMLtoPDF.PdfGeneratorListener;
 import com.gkemon.XMLtoPDF.model.FailureResponse;
 import com.gkemon.XMLtoPDF.model.SuccessResponse;
 import com.google.gson.Gson;
+import com.iitp.obsencemediadetector.Images.ImageFolderScan.ScanFolderImages;
 import com.iitp.obsencemediadetector.Model.ScannedVideo;
 import com.iitp.obsencemediadetector.Model.VideoFacer;
 import com.iitp.obsencemediadetector.Model.VideoFolder;
@@ -176,7 +177,7 @@ public class ScanFolderVideos extends AppCompatActivity {
             }while (cursor.moveToNext());
         }catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Err: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScanFolderVideos.this, "Err: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         finally {
             cursor.close();
@@ -194,7 +195,7 @@ public class ScanFolderVideos extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if(scannedVideosArrayList.size()==0){
             progressDialog.dismiss();
-            Toast.makeText(getApplicationContext(), "No Obscene Media detected!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScanFolderVideos.this, "No Obscene Media detected!!", Toast.LENGTH_SHORT).show();
             return;
         }
         ScannedVideoAdapter adapter = new ScannedVideoAdapter(this, scannedVideosArrayList);

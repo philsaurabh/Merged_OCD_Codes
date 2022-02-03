@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.iitp.obsencemediadetector.MainActivity;
 import com.iitp.obsencemediadetector.Model.ImageFolder;
 import com.iitp.obsencemediadetector.R;
 import com.iitp.obsencemediadetector.Utils.BackgroundWork;
@@ -24,13 +26,15 @@ public class ImageGalleryFolders extends AppCompatActivity {
 
     private static final String TAG = "TagGallery";
     ProgressBar progressBar;
+    RecyclerView recyclerView;
     ArrayList<ImageFolder> imageFolders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_gallery_folders);
-        progressBar = findViewById(R.id.gallery_folders_progress_bar);
+
+        _init();
 
         progressBar.setVisibility(View.VISIBLE);
         new BackgroundWork(this){
@@ -44,15 +48,23 @@ public class ImageGalleryFolders extends AppCompatActivity {
             @Override
             public void onPostExecute() {
                 super.onPostExecute();
-                ImageGalleryAdapter adapter = new ImageGalleryAdapter(getApplicationContext(), imageFolders);
+                ImageGalleryAdapter adapter = new ImageGalleryAdapter(ImageGalleryFolders.this, imageFolders);
                 Log.d(TAG, "onCreate: Adapter Size: " + adapter.getItemCount());
-                RecyclerView recyclerView = findViewById(R.id.gallery_folders_rcv);
-                recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+                recyclerView.setLayoutManager(new GridLayoutManager(ImageGalleryFolders.this, 3));
                 recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
             }
         }.execute();
 
+    }
+
+    private void _init() {
+        progressBar = findViewById(R.id.gallery_folders_progress_bar);
+        recyclerView = findViewById(R.id.gallery_folders_rcv);
+//        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+//        recyclerView.getLayoutParams().height = height;
+//        recyclerView.setHasFixedSize(false);
+//        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private ArrayList<ImageFolder> getFoldersList(){
@@ -105,7 +117,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
             cursor.close();
         }catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ImageGalleryFolders.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         for (int i = 0; i < foldersList.size(); i++) {

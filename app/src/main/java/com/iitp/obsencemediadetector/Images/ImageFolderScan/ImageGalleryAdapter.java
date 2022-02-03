@@ -1,8 +1,12 @@
 package com.iitp.obsencemediadetector.Images.ImageFolderScan;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +15,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.iitp.obsencemediadetector.Model.ImageFolder;
 import com.iitp.obsencemediadetector.R;
+import com.iitp.obsencemediadetector.Utils.BackgroundWork;
 import com.iitp.obsencemediadetector.databinding.CartGalleryFoldersBinding;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapter.ViewHolder>{
+public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<ImageFolder> imageFolderArrayList;
 
     private static final String TAG = "TagGalleryAdapter";
+
     public ImageGalleryAdapter(Context mContext, ArrayList<ImageFolder> imageFolderArrayList) {
         Log.d(TAG, "GalleryAdapter: Const Called");
         this.mContext = mContext;
@@ -43,15 +52,16 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ImageFolder imageFolder = imageFolderArrayList.get(position);
-//        if(imageFolder.getFolderImages()==null){
-//            imageFolder.setFolderImages(new ArrayList<>());
-//        }
-//        Log.d(TAG, "onBindViewHolder: Images: " + imageFolder.getFolderImages().size());
-        Picasso.get().load(new File(imageFolder.getFirstPic())).into(holder.binding.cartGalleryFolderImage);
-        holder.binding.cartGalleryFolderName.setText(imageFolder.getNumberOfPics() + " " +imageFolder.getFolderName());
+//        Picasso.get().load(new File(imageFolder.getFirstPic())).into(holder.binding.cartGalleryFolderImage);
+//        holder.binding.cartGalleryFolderImage.setImageURI(Uri.parse(imageFolder.getFirstPic()));
+        Glide.with(mContext)
+                .load(imageFolder.getFirstPic())
+                .apply(new RequestOptions().centerCrop())
+                .into(holder.binding.cartGalleryFolderImage);
+        holder.binding.cartGalleryFolderName.setText(imageFolder.getNumberOfPics() + " " + imageFolder.getFolderName());
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-        holder.binding.cartGalleryFolderImage.getLayoutParams().width = width/3;
-        holder.binding.cartGalleryFolderImage.getLayoutParams().height = width/3;
+        holder.binding.cartGalleryFolderImage.getLayoutParams().width = width / 3;
+        holder.binding.cartGalleryFolderImage.getLayoutParams().height = width / 3;
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +83,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CartGalleryFoldersBinding binding;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             Log.d(TAG, "ViewHolder: ");

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.iitp.obsencemediadetector.Model.ScannedImages;
 import com.iitp.obsencemediadetector.Utils.ImageResizer;
 import com.iitp.obsencemediadetector.Utils.MlModel;
 import com.iitp.obsencemediadetector.R;
@@ -31,7 +32,7 @@ public class SingleImageScan extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent==null || !intent.hasExtra("ImageUri")){
-            Toast.makeText(getApplicationContext(), "Failed to fetch Image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SingleImageScan.this, "Failed to fetch Image", Toast.LENGTH_SHORT).show();
             return;
         }
 

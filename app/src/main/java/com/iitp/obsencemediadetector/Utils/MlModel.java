@@ -78,7 +78,7 @@ public class MlModel {
         } else if (DurationMilliSecond <= 1800 * 1000) {
             looper = 15 * 1000;
         } else if (DurationMilliSecond <= 3600 * 1000) {
-            looper = 30 * 1000;
+            looper = 30 * 1000  ;
         } else {
             looper = 60 * 1000;
         }
