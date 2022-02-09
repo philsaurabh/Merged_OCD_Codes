@@ -50,6 +50,56 @@ public class MlModel {
         }
     }
 
+    public static boolean isVideoObscene(Context context, Uri videoUri){
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        String time = "0";
+        try {
+            retriever.setDataSource(context, videoUri);
+            time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        long DurationMilliSecond = 0;
+        if (time != null) {
+            DurationMilliSecond = Long.parseLong(time);
+        }
+        Log.d(TAG, "isVideoObscene: Time: " + time);
+        Log.d(TAG, "isVideoObscene: Seconds: " + DurationMilliSecond);
+
+        int looper = 0;
+
+        if (DurationMilliSecond <= 120 * 1000) {
+            looper = 3 * 1000;
+        } else if (DurationMilliSecond <= 600 * 1000) {
+            looper = 4 * 1000;
+        } else if (DurationMilliSecond <= 1800 * 1000) {
+            looper = 15 * 1000;
+        } else if (DurationMilliSecond <= 3600 * 1000) {
+            looper = 30 * 1000  ;
+        } else {
+            looper = 60 * 1000;
+        }
+
+        long i = 0;
+        ArrayList<BitmapValue> bitmapValues = new ArrayList<>();
+
+        while (i < DurationMilliSecond) {
+            // Setting Progress Dialog
+
+            Bitmap bitmap = retriever.getFrameAtTime(i * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+            if (bitmap != null) {
+                bitmap = ImageResizer.reduceBitmapSize(bitmap, 240000);
+                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                float value = MlModel.ProcessData(context, bitmap);
+                if (value > 0.75) {
+                    return true;
+                }
+            }
+            i += looper;
+        }
+        return false;
+    }
 
     public static ScannedVideo processVideo(Context context, Uri videoUri) {
         ScannedVideo scannedVideo = new ScannedVideo();

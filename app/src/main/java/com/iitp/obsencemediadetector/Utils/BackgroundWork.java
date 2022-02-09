@@ -9,17 +9,19 @@ public class BackgroundWork {
         this.activity = activity;
     }
 
-    public void startBackground(){
+    public void startBackground() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 doInBackground();
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onPostExecute();
-                    }
-                });
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onPostExecute();
+                        }
+                    });
+                }
             }
         }).start();
     }
@@ -27,6 +29,10 @@ public class BackgroundWork {
     public void execute() {
         startBackground();
     }
-    public void doInBackground() { }
-    public void onPostExecute() { }
+
+    public void doInBackground() {
+    }
+
+    public void onPostExecute() {
+    }
 }

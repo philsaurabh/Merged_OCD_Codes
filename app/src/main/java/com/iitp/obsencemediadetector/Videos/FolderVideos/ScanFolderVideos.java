@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +44,8 @@ import java.util.Date;
 
 public class ScanFolderVideos extends AppCompatActivity {
 
+    private static final String TAG = "ScanFolderVideosTag";
+
     private static final int PHONE_STATE_REQUEST = 12;
     private long startTime;
     private ArrayList<ScannedVideo> scannedVideosArrayList = new ArrayList<>();
@@ -53,6 +56,7 @@ public class ScanFolderVideos extends AppCompatActivity {
     private VideoFolder videoFolder;
     private LinearLayout printLl;
     private Button printButton;
+    ScanFolderVideoPartsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,21 +77,31 @@ public class ScanFolderVideos extends AppCompatActivity {
 
         startTime = System.currentTimeMillis();
         videoFolder = new Gson().fromJson(intent.getStringExtra("VideoGson"), VideoFolder.class);
-        videoArrayList = getVideosByFolder(videoFolder.getPath());
-
         SetHeaderData();
+
+        Log.d(TAG, "onCreate: Start Time: " + startTime);
 
         new BackgroundWork(this){
             @Override
             public void doInBackground() {
                 super.doInBackground();
-                FetchData();
+                videoArrayList = getVideosByFolder(videoFolder.getPath());
+                ScannedVideo[] scannedVideos = new ScannedVideo[videoArrayList.size()];
+                for(int i=0; i<videoArrayList.size(); ++i){
+                    scannedVideos[i] = null;
+                }
+                adapter = new ScanFolderVideoPartsAdapter(ScanFolderVideos.this, videoArrayList, scannedVideos);
+//                FetchData();
             }
 
             @Override
             public void onPostExecute() {
                 super.onPostExecute();
-                SetFetchedData();
+//                SetFetchedData();
+                Log.d(TAG, "onPostExecute: End Time: " + System.currentTimeMillis());
+                recyclerView.setLayoutManager(new LinearLayoutManager(ScanFolderVideos.this));
+                recyclerView.setAdapter(adapter);
+                progressDialog.dismiss();
             }
         }.execute();
 
@@ -142,6 +156,10 @@ public class ScanFolderVideos extends AppCompatActivity {
     private void SetHeaderData() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED) {
             String imeiNum = FetchIMEI.getIMEI(this);
+            if(imeiNum.trim().isEmpty()){
+                String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                imei.setText("Android Id: " + ANDROID_ID);
+            }
             imei.setText("IMEI: " + imeiNum);
         }
         else{

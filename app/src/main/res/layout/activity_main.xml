@@ -108,6 +108,32 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/main_folder_video_checking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_baseline_video_library_24"
+                app:tint="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Folder Videos Checking"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/main_folder_video"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -127,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="Folder Videos Scanning"
+                android:text="Folder Videos Deep Scan"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 

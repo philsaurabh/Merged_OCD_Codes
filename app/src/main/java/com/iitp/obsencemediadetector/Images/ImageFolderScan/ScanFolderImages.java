@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -113,6 +114,10 @@ public class ScanFolderImages extends AppCompatActivity {
     private void SetHeaderData() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)==PackageManager.PERMISSION_GRANTED) {
             String imeiNum = FetchIMEI.getIMEI(this);
+            if(imeiNum.trim().isEmpty()){
+                String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                imei.setText("Android Id: " + ANDROID_ID);
+            }
             imei.setText("IMEI: " + imeiNum);
         }
         else{

@@ -27,9 +27,9 @@ import java.util.ArrayList;
 public class VideoGalleryFolders extends AppCompatActivity {
 
     private static final String TAG = "TagVideoGalleryFolders";
-    RecyclerView recyclerView;
-    ArrayList<VideoFolder> videoFolderArrayList = new ArrayList<>();
-    ProgressBar progressBar;
+    private RecyclerView recyclerView;
+    private ArrayList<VideoFolder> videoFolderArrayList = new ArrayList<>();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

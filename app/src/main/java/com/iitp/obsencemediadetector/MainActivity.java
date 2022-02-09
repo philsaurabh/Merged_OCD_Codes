@@ -18,6 +18,7 @@ import com.iitp.obsencemediadetector.Images.ImageFolderScan.ImageGalleryFolders;
 import com.iitp.obsencemediadetector.Images.SingleImageScan.SingleImageScan;
 import com.iitp.obsencemediadetector.Videos.FolderVideos.VideoGalleryFolders;
 import com.iitp.obsencemediadetector.Videos.SingleVideos.SingleVideoScanning;
+import com.iitp.obsencemediadetector.Videos.VideoChecker.CheckVideoGalleryFolders;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int VIDEO_REQUEST = 3;
     private static final String TAG = "MainActivityTag";
 
-    private LinearLayout singleImage, folderImage, singleVideo, folderVideo;
+    private LinearLayout singleImage, folderImage, singleVideo, folderVideo, folderVideoChecking;
     public static final String[] reqPermission = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
@@ -70,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, VideoGalleryFolders.class));
             }
         });
+
+        folderVideoChecking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, CheckVideoGalleryFolders.class));
+            }
+        });
+
     }
 
     private void SingleVideoScanning() {
@@ -93,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         singleVideo = findViewById(R.id.main_single_video);
         folderImage = findViewById(R.id.main_folder_image);
         folderVideo = findViewById(R.id.main_folder_video);
+        folderVideoChecking = findViewById(R.id.main_folder_video_checking);
     }
 
     private void GetImage() {

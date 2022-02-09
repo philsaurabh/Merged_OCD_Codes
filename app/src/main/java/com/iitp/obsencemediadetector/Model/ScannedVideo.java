@@ -39,4 +39,12 @@ public class ScannedVideo {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
+    @Override
+    public String toString() {
+        return "ScannedVideo{" +
+                "maxValue=" + maxValue +
+                ", fileName='" + fileName + '\'' +
+                '}';
+    }
 }
