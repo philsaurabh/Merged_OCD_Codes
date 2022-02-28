@@ -37,6 +37,10 @@ public class SingleVideoScanning extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_video_testing);
+        start = System.currentTimeMillis();
+
+        Log.d(TAG, "onCreate: Start time: " + start);
+
         recyclerView = findViewById(R.id.video_testing_rcv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
@@ -51,7 +55,6 @@ public class SingleVideoScanning extends AppCompatActivity {
         }
 
         progressDialog.show();
-        start = System.currentTimeMillis();
         new BackgroundWork(this) {
             @Override
             public void doInBackground() {
@@ -114,6 +117,7 @@ public class SingleVideoScanning extends AppCompatActivity {
             looper = 60 * 1000;
         }
 
+        Log.d(TAG, "GetObsceneResult: Model Start time: " + System.currentTimeMillis());
 
         long i = 0;
         scannedVideoImagesArrayList = new ArrayList<>();

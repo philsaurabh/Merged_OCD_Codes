@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 public class CheckVideoGalleryFolders extends AppCompatActivity {
 
+    private static final String TAG = "TagCheckVideoGalleryFolders";
     private RecyclerView recyclerView;
     private ArrayList<VideoFolder> videoFolderArrayList = new ArrayList<>();
     private ProgressBar progressBar;
@@ -32,9 +33,13 @@ public class CheckVideoGalleryFolders extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_video_gallery_folders);
+
+        Log.d(TAG, "onCreate: StartTime: " + System.currentTimeMillis());
+
         recyclerView = findViewById(R.id.check_video_gallery_folder_rcv);
         progressBar = findViewById(R.id.check_video_gallery_folder_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
+
         new BackgroundWork(this){
             @Override
             public void doInBackground() {
@@ -49,6 +54,7 @@ public class CheckVideoGalleryFolders extends AppCompatActivity {
                 recyclerView.setLayoutManager(new GridLayoutManager(CheckVideoGalleryFolders.this, 3));
                 recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
+                Log.d(TAG, "onPostExecute: End time: " + System.currentTimeMillis());
             }
         }.execute();
     }

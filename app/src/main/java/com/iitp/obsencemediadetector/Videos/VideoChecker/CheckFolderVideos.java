@@ -42,6 +42,7 @@ import java.util.Date;
 public class CheckFolderVideos extends AppCompatActivity {
 
     private static final int PHONE_STATE_REQUEST = 12;
+    private static final String TAG = "TagCheckFOlderVideos";
     private long startTime;
     private ArrayList<ScannedVideo> scannedVideosArrayList = new ArrayList<>();
     ArrayList<VideoFacer> videoArrayList;
@@ -57,6 +58,8 @@ public class CheckFolderVideos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_folder_videos);
+
+        Log.d(TAG, "onCreate: Start Time: " + System.currentTimeMillis());
 
         _init();
 
@@ -88,6 +91,7 @@ public class CheckFolderVideos extends AppCompatActivity {
                 recyclerView.setLayoutManager(new LinearLayoutManager(CheckFolderVideos.this));
                 recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
+                Log.d(TAG, "onPostExecute: End time: " + System.currentTimeMillis());
             }
         }.execute();
 
@@ -102,7 +106,7 @@ public class CheckFolderVideos extends AppCompatActivity {
     private void SetHeaderData() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             String imeiNum = FetchIMEI.getIMEI(this);
-            if(imeiNum.trim().isEmpty()){
+            if (imeiNum.trim().isEmpty()) {
                 String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
                 imei.setText("Android Id: " + ANDROID_ID);
             }

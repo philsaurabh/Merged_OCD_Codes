@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 public class CheckFolderVideoAdapter extends RecyclerView.Adapter<CheckFolderVideoAdapter.ViewHolder>{
 
+    private static final String TAG = "CheckFolderVideoAdapter";
     private Context mContext;
     private ArrayList<VideoFacer> VideoFacerArrayList;
     private int[] scoreList;
@@ -86,6 +88,7 @@ public class CheckFolderVideoAdapter extends RecyclerView.Adapter<CheckFolderVid
                 public void onPostExecute() {
                     super.onPostExecute();
                     holder.binding.cartCheckVideoProgressBar.setVisibility(View.GONE);
+                    Log.d(TAG, "onPostExecute: End time: " + System.currentTimeMillis());
                     if (isObscene[0]) {
                         scoreList[holder.getAdapterPosition()] = 1;
                         holder.binding.cartCheckVideoStatus.setText("Obscene");

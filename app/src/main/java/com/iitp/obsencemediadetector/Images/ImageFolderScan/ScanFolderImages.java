@@ -66,7 +66,7 @@ public class ScanFolderImages extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_folder_images);
-
+        Log.d(TAG, "onCreate: Start Time: " + System.currentTimeMillis());
         init();
 
         Intent intent = getIntent();
@@ -77,13 +77,6 @@ public class ScanFolderImages extends AppCompatActivity {
         imageFolder = new Gson().fromJson(intent.getStringExtra("folderGson"), ImageFolder.class);
         SetHeaderData();
 
-        ArrayList<PictureFacer> folderImageList = getAllImagesByFolder(imageFolder.getPath());
-
-        Log.d(TAG, "onCreate: ImagesFetched: " + folderImageList.size());
-        Log.d(TAG, "onCreate: Total Images: " + imageFolder.getNumberOfPics());
-        Log.d(TAG, "onCreate: ImagesStr: " + folderImageList.get(0).getPicturePath());
-
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Fetching Data");
         progressDialog.show();
@@ -92,6 +85,8 @@ public class ScanFolderImages extends AppCompatActivity {
             @Override
             public void doInBackground() {
                 super.doInBackground();
+                ArrayList<PictureFacer> folderImageList = getAllImagesByFolder(imageFolder.getPath());
+                Log.d(TAG, "doInBackground: Time to fetch all photos: " + System.currentTimeMillis());
                 getRcvData(folderImageList);
             }
 
@@ -223,6 +218,7 @@ public class ScanFolderImages extends AppCompatActivity {
         long timeDiff = endMilliSec - startMilliSec;
         progressDialog.dismiss();
         Toast.makeText(ScanFolderImages.this, scannedImagesArrayList.size() + " images scanned in " + timeDiff + " milliseconds" + "\n" +obsceneImageList.size() + " obscene Images found", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "SetRecyclerView: End Time : " + System.currentTimeMillis());
     }
 
     public ArrayList<PictureFacer> getAllImagesByFolder(String path){

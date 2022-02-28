@@ -34,6 +34,8 @@ public class ImageGalleryFolders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_gallery_folders);
 
+        Log.d(TAG, "onCreate: Start: " + System.currentTimeMillis());
+
         _init();
 
         progressBar.setVisibility(View.VISIBLE);
@@ -48,6 +50,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
             @Override
             public void onPostExecute() {
                 super.onPostExecute();
+                Log.d(TAG, "onCreate: Photos Fetched: " + System.currentTimeMillis());
                 ImageGalleryAdapter adapter = new ImageGalleryAdapter(ImageGalleryFolders.this, imageFolders);
                 Log.d(TAG, "onCreate: Adapter Size: " + adapter.getItemCount());
                 recyclerView.setLayoutManager(new GridLayoutManager(ImageGalleryFolders.this, 3));
@@ -93,9 +96,13 @@ public class ImageGalleryFolders extends AppCompatActivity {
                 Log.d(TAG, "getFoldersList: Folder: " + folderName);
                 Log.d(TAG, "getFoldersList: DataPath: " + dataPath);
 
+                if(dataPath.lastIndexOf(folderName + "/")<=0){
+                    continue;
+                }
                 String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
                 folderPaths +=  folderName + "/";
                 Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
+
                 if(!picPath.contains(folderPaths)){
                     picPath.add(folderPaths);
 
@@ -117,7 +124,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
             cursor.close();
         }catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(ImageGalleryFolders.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(ImageGalleryFolders.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         for (int i = 0; i < foldersList.size(); i++) {
