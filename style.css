@@ -1,0 +1,14 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background-color: #9A616D;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: -webkit-linear-gradient(to right, rgb(155, 74, 88), rgb(156, 81, 85)); */
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgb(119 109 161), rgb(158, 70, 77));
+  }
+.card{
+  background-image: url(women.png);
+}
+  
