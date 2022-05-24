@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="styledashboard.css"/>
+    <title>Dashboard page</title>
+  </head>
+
+  <body class="home">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12 col-12 col-lg-12 col-sm-12 float-end">
+          <!--<button type="button" class="slide-toggle">Slide Toggle</button> -->
+
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <div>
+              <a class="title navbar-brand pe-5 text-wrap" href="#"> 
+                IITP Centre of Excellence in Cyber Crime Prevention against
+                Women and Children- AI based Tools for Women and Children
+                Safety</a>
+              </div>
+            
+              <li class="nav-item text-nowrap">
+                <a href="/users/logout" class="nav-link" href="#" style="padding-bottom: 20px; color: white;">
+                  <i  class="fa-solid fa-arrow-right-from-bracket"></i><h6>Logout</h6></a>
+              </li>
+
+              
+            </div>
+          </nav>
+        </div>
+
+
+
+
+        <div class="col-12 col-lg-12 col-md-12 col-sm-12 ng-star-inserted">
+          <div class="card" style="height: 17rem; margin-left: 5px; margin-right: 5px;
+          margin-top: 5px; border-radius: 15px;">
+            <div class="card-header" style="text-align: center; 
+            background-color: #d8d0df;"><h5>Welcome</h5></div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4" style="max-width: 27%">
+                  <img alt="img" class="img-fluid mx-auto" src="usericon.png" style="width: 150px;
+                  height: 117px;
+                  margin-top: 10px;
+                  border-radius: 20px;
+                  padding-top: 5px;" />
+                  <!-- <p> <i class="fa-solid fa-user-check fa-2xl"></i> </p> -->
+                </div>
+                <div class="col-8">
+                  <h2><%= name %></h2>
+                  <hr/>
+                  <p>
+                    <b> Username: </b> abcxyz1404 &nbsp; <br/>
+                    <b>Post: </b> Head of the Department<br/>
+                    <b>Email: </b><%= email %><br/>
+                  </p>
+                  <table>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </table>
+               </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+
+
+
+        <div class="col-12 col-lg-6 col-md-6 col-sm-12 ng-star-inserted">
+          <div class="card" style="margin-right: 5px; margin-left: 5px;
+          margin-top: 5px; border-radius: 15px;">
+            <div class="card-body" style="height: 13rem; padding-top: 13px;">
+               
+                <table class="table display-table col-8 col-lg-4 col-md-4 col-sm-12" style="margin-top: 5px;">
+                  <tbody>
+                  
+
+                    <a href="#scuffle" class="btn-block" style="color: black">
+                    <div class="col">
+                    <div class="border scroll" style="background-color: #d8d0df;;
+                    height: 39px; text-align: center; padding-top: 6px; font-weight: 600;" data-filter="scuffle">
+                     Scuffle <i class="fa-solid fa-hand-back-fist"></i>
+                    </div>
+                    </div>
+                    </a>
+
+
+                    <hr>
+
+
+                    <a href="#weapon" class="btn-block" style="color: black">
+                    <div class="col">
+                    <div class="border scroll" style="background-color: #d8d0df;
+                    height: 39px; text-align: center; padding-top: 6px; font-weight: 600;" data-filter="weapon">
+                      Weapon <i class="fa-solid fa-gun"></i>
+                    </div>
+                    </div>
+                    </a>
+                  
+
+                    <hr>
+  
+
+                    <a href="#vehicle" class="btn-block" style="color: black">
+                    <div class="col">
+                    <div class="border scroll" style="background-color: #d8d0df;
+                    height: 39px; text-align: center; padding-top: 6px; font-weight: 600;" data-filter="vehicle">
+                      Vehicle <i class="fa-solid fa-car"></i>
+                    </div>
+                   </div>
+                   </a>
+                    
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="col-12 col-lg-6 col-md-6 col-sm-12 ng-star-inserted">
+            <div class="card" style="margin-right: 5px; margin-left: 5px;
+            margin-top: 5px; border-radius: 15px;">
+              <div class="card-body" style="height: 13rem; padding-top: 13px;">
+                 
+                  <table class="table display-table col-8 col-lg-4 col-md-4 col-sm-12" style="margin-top: 5px">
+                    <tbody>
+                      
+                      <a href="#faces" class="btn-block" style="color: black">
+                      <div class="col">
+                      <div class="border scroll" style="background-color: #d8d0df;
+                      height: 39px; text-align: center; padding-top: 6px; font-weight: 600;">
+                        Faces <i class="fa-solid fa-user-large"></i>
+                      </div>
+                      </div>
+                      </a>
+
+
+                      <hr>
+    
+
+                      <a href="#fullbody" class="btn-block" style="color: black">
+                      <div class="col">
+                      <div class="border scroll" style="background-color: #d8d0df;
+                      height: 39px; text-align: center; padding-top: 6px; font-weight: 600;">
+                      Full Body <i class="fa-solid fa-child"></i>
+                      </div>
+                      </div>
+                      </a>
+
+
+                      <hr>
+    
+                      
+                    
+                      <a href="#obscene" class="btn-block" style="color: black">
+                      <div class="col">
+                      <div class="border scroll" style="background-color: #d8d0df;
+                      height: 39px; text-align: center; padding-top: 6px; font-weight: 600;">
+                         Obscene <i class="fa-solid fa-face-frown"></i>
+                      </div>
+                      </div>
+                     </a>
+
+                    
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+
+
+
+
+
+
+
+            <div class="filtr-container">
+
+              <div class="card" data-category="scuffle" id="scuffle" style="margin-top: 25px;height: 40rem;">
+                <div class="card-header text-center filtr-item" style="background-color: #d8d0df">
+                  SCUFFLE
+                </div>
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas dolorem repellendus repellat perferendis expedita culpa ipsam alias blanditiis sequi quae fuga facere, totam ratione laborum nihil minus dolor quo velit maxime minima aliquam? Nostrum cupiditate nulla voluptatem repellat. Reiciendis, officiis? Eveniet animi ullam beatae, blanditiis labore a iure numquam sapiente?
+                </div>
+              </div>
+      
+                <div class="card" data-category="weapon" id="weapon" style="margin-top: 25px;height: 40rem;">
+                  <div class="card-header text-center filtr-item" style="background-color: #d8d0df;">
+                    WEAPON
+                  </div>
+                  <div class="card-body">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas dolorem repellendus repellat perferendis expedita culpa ipsam alias blanditiis sequi quae fuga facere, totam ratione laborum nihil minus dolor quo velit maxime minima aliquam? Nostrum cupiditate nulla voluptatem repellat. Reiciendis, officiis? Eveniet animi ullam beatae, blanditiis labore a iure numquam sapiente?
+                  </div>
+                </div>
+      
+      
+                <div class="card" data-category="vehicle" id="vehicle" style="margin-top: 25px;height: 40rem;">
+                  <div class="card-header text-center filtr-item" style="background-color: #d8d0df;">
+                    VEHICLE
+                  </div>
+                  <div class="card-body">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas dolorem repellendus repellat perferendis expedita culpa ipsam alias blanditiis sequi quae fuga facere, totam ratione laborum nihil minus dolor quo velit maxime minima aliquam? Nostrum cupiditate nulla voluptatem repellat. Reiciendis, officiis? Eveniet animi ullam beatae, blanditiis labore a iure numquam sapiente?
+                  </div>
+                </div>
+      
+      
+                <div class="card" data-category="faces" id="faces" style="margin-top: 25px;height: 40rem;">
+                  <div class="card-header text-center filtr-item" style="background-color: #d8d0df;">
+                   FACES
+                  </div>
+                  <div class="card-body">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem neque laudantium officia iure velit dicta rerum vitae ratione ea numquam maiores, non porro dolorum. Ea eum incidunt quaerat dolores ipsa voluptates qui quam at cupiditate quas pariatur porro, quia sed. At molestiae dicta animi earum quos quas quisquam voluptatum? Debitis!
+                  </div>
+                </div>
+      
+                <div class="card" data-category="fullbody" id="fullbody" style="margin-top: 25px;height: 40rem;">
+                  <div class="card-header text-center filtr-item" style="background-color: #d8d0df;">
+                    FULL BODY
+                  </div>
+                  <div class="card-body">
+                   Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi nostrum nobis aut aliquam laboriosam rem qui dolores. Natus ipsum suscipit sequi placeat culpa odio impedit debitis id voluptatibus laborum accusantium molestiae, aspernatur quas rem nam reprehenderit, illo magnam deserunt saepe totam ducimus? Illo doloremque doloribus ea amet, nihil officia impedit.
+                  </div>
+                </div>
+      
+                <div class="card" data-category="obscene" id="obscene" style="margin-top: 25px;height: 40rem;">
+                  <div class="card-header text-center filtr-item" style="background-color: #d8d0df;">
+                    OBSCENE
+                  </div>
+                  <div class="card-body">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequatur quas eius eos quis hic, inventore aperiam illo in ut perferendis corporis dolorem beatae soluta dolorum officia voluptatum quo unde dignissimos rerum voluptatibus enim. Iusto quaerat accusantium exercitationem at consequuntur voluptates quidem laborum eum doloribus similique? Laboriosam quos animi distinctio nostrum?
+                  </div>
+                </div> 
+      
+      
+              </div>
+      
+      
+    
+
+
+
+
+
+      </div> 
+      </div>
+            
+       
+
+      </div>
+      </div>
+
+    
+    <script src="https://kit.fontawesome.com/7a3e156349.js" crossorigin="anonymous"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/5067d75733.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="myscripts.js"></script>
+  </body>
+</html>
