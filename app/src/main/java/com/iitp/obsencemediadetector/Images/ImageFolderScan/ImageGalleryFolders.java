@@ -88,40 +88,56 @@ public class ImageGalleryFolders extends AppCompatActivity {
             if(cursor!=null){
                 cursor.moveToNext();
             }
+            else{
+                Log.d(TAG, "getFoldersList: Null cursor");
+            }
             do{
                 ImageFolder imageFolder = new ImageFolder();
-                String folderName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                String dataPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                String folderName;
+                String dataPath;
+                if (cursor != null) {
 
-                Log.d(TAG, "getFoldersList: Folder: " + folderName);
-                Log.d(TAG, "getFoldersList: DataPath: " + dataPath);
+                    folderName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                    dataPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
 
-                if(dataPath.lastIndexOf(folderName + "/")<=0){
-                    continue;
-                }
-                String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
-                folderPaths +=  folderName + "/";
-                Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
+                    Log.d(TAG, "getFoldersList: Folder: " + folderName);
+                    Log.d(TAG, "getFoldersList: DataPath: " + dataPath);
 
-                if(!picPath.contains(folderPaths)){
-                    picPath.add(folderPaths);
+                    if(dataPath.lastIndexOf(folderName + "/")<=0){
+                        Log.d(TAG, "getFoldersList: NegativePath: " + dataPath);
+                        continue;
+                    }
 
-                    imageFolder.setPath(folderPaths);
-                    imageFolder.setFolderName(folderName);
-                    imageFolder.setFirstPic(dataPath); //if the folder has only one picture this line helps to set it as first so as to avoid blank image in itemview
-                    imageFolder.addPics();
-                    foldersList.add(imageFolder);
-                }
-                else{
-                    for(int i=0; i<foldersList.size(); ++i){
-                        if(foldersList.get(i).getPath().equals(folderPaths)){
-                            foldersList.get(i).setFirstPic(dataPath);
-                            foldersList.get(i).addPics();
+                    String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
+                    folderPaths +=  folderName + "/";
+                    Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
+
+                    if(!picPath.contains(folderPaths)){
+                        picPath.add(folderPaths);
+
+                        imageFolder.setPath(folderPaths);
+                        imageFolder.setFolderName(folderName);
+                        imageFolder.setFirstPic(dataPath); //if the folder has only one picture this line helps to set it as first so as to avoid blank image in itemview
+                        imageFolder.addPics();
+                        foldersList.add(imageFolder);
+                    }
+                    else{
+                        for(int i=0; i<foldersList.size(); ++i){
+                            if(foldersList.get(i).getPath().equals(folderPaths)){
+                                foldersList.get(i).setFirstPic(dataPath);
+                                foldersList.get(i).addPics();
+                            }
                         }
                     }
+
                 }
-            }while (cursor.moveToNext());
-            cursor.close();
+                else{
+                    Log.d(TAG, "getFoldersList: Cursor is Null");
+                }
+            }while (cursor!=null && cursor.moveToNext());
+            if(cursor!=null) {
+                cursor.close();
+            }
         }catch (Exception e){
             e.printStackTrace();
 //            Toast.makeText(ImageGalleryFolders.this, e.getMessage(), Toast.LENGTH_SHORT).show();

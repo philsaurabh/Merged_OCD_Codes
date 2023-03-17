@@ -14,8 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.iitp.obsencemediadetector.Images.HiddenImages.HiddenImageActivity;
 import com.iitp.obsencemediadetector.Images.ImageFolderScan.ImageGalleryFolders;
 import com.iitp.obsencemediadetector.Images.SingleImageScan.SingleImageScan;
+import com.iitp.obsencemediadetector.Testing.GalleryHiddenTesting;
 import com.iitp.obsencemediadetector.Videos.FolderVideos.VideoGalleryFolders;
 import com.iitp.obsencemediadetector.Videos.SingleVideos.SingleVideoScanning;
 import com.iitp.obsencemediadetector.Videos.VideoChecker.CheckVideoGalleryFolders;

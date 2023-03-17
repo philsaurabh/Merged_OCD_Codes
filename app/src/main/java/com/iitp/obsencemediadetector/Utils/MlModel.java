@@ -32,12 +32,7 @@ public class MlModel {
             Obscenetmquant.Outputs outputs = model.process(buffer);
 
             @NonNull TensorBuffer tensorBuffer = outputs.getOutputFeature0AsTensorBuffer();
-            Log.d(TAG, "ProcessData: TBF string: " + tensorBuffer.toString());
-            Log.d(TAG, "ProcessData: TBF: " + tensorBuffer);
 
-            for (int i = 0; i < tensorBuffer.getFloatArray().length; ++i) {
-                Log.d(TAG, "ProcessData: FloatArr: " + tensorBuffer.getFloatArray()[i]);
-            }
             float a = tensorBuffer.getFloatArray()[0];
             float b = tensorBuffer.getFloatArray()[1];
             float e = 1000 * b;
@@ -82,7 +77,6 @@ public class MlModel {
         }
 
         long i = 0;
-        ArrayList<BitmapValue> bitmapValues = new ArrayList<>();
 
         while (i < DurationMilliSecond) {
             // Setting Progress Dialog
