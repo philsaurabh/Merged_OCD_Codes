@@ -51,6 +51,7 @@ public class ScanFolderImages extends AppCompatActivity {
 
     private static final String TAG = "TagScanFolderImages";
     private static final int PHONE_STATE_REQUEST = 21;
+    private static final float MAX_OBSCENE_SCORE = (float) 0.90;
     RecyclerView recyclerView;
     ScannedFolderImagesAdapter adapter;
     Button printButton;
@@ -66,7 +67,7 @@ public class ScanFolderImages extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_folder_images);
-        Log.d(TAG, "onCreate: Start Time: " + System.currentTimeMillis());
+//        Log.d(TAG, "onCreate: Start Time: " + System.currentTimeMillis());
         init();
 
         Intent intent = getIntent();
@@ -86,7 +87,7 @@ public class ScanFolderImages extends AppCompatActivity {
             public void doInBackground() {
                 super.doInBackground();
                 ArrayList<PictureFacer> folderImageList = getAllImagesByFolder(imageFolder.getPath());
-                Log.d(TAG, "doInBackground: Time to fetch all photos: " + System.currentTimeMillis());
+//                Log.d(TAG, "doInBackground: Time to fetch all photos: " + System.currentTimeMillis());
                 getRcvData(folderImageList);
             }
 
@@ -145,24 +146,24 @@ public class ScanFolderImages extends AppCompatActivity {
                 .build(new PdfGeneratorListener() {
                     @Override
                     public void onStartPDFGeneration() {
-                        Log.d(TAG, "onStartPDFGeneration: Started");
+//                        Log.d(TAG, "onStartPDFGeneration: Started");
                     }
 
                     @Override
                     public void onFinishPDFGeneration() {
-                        Log.d(TAG, "onFinishPDFGeneration: Finished");
+//                        Log.d(TAG, "onFinishPDFGeneration: Finished");
                     }
 
                     @Override
                     public void onSuccess(SuccessResponse response) {
                         super.onSuccess(response);
-                        Log.d(TAG, "onSuccess:");
+//                        Log.d(TAG, "onSuccess:");
                     }
 
                     @Override
                     public void onFailure(FailureResponse failureResponse) {
                         super.onFailure(failureResponse);
-                        Log.d(TAG, "onFailure: " + failureResponse.getErrorMessage());
+//                        Log.d(TAG, "onFailure: " + failureResponse.getErrorMessage());
                     }
                 });
 
@@ -188,9 +189,9 @@ public class ScanFolderImages extends AppCompatActivity {
                 float index = MlModel.ProcessData(this, bitmap);
                 ScannedImages scannedImages = new ScannedImages(pictureFacer.getPicturePath(), pictureFacer.getPicturName(), index);
                 scannedImagesArrayList.add(scannedImages);
-                Log.d(TAG, "onCreate: Index: " + index);
+//                Log.d(TAG, "onCreate: Index: " + index);
             } catch (IOException e) {
-                Log.d(TAG, "onCreate: Err Catch: " + e.getMessage());
+//                Log.d(TAG, "onCreate: Err Catch: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -206,7 +207,7 @@ public class ScanFolderImages extends AppCompatActivity {
 
         ArrayList<ScannedImages> obsceneImageList = new ArrayList<>();
         for(ScannedImages scannedImages : scannedImagesArrayList){
-            if(scannedImages.getObsceneNature()>=0.5){
+            if(scannedImages.getObsceneNature()>=MAX_OBSCENE_SCORE){
                 obsceneImageList.add(scannedImages);
             }
         }
@@ -218,7 +219,7 @@ public class ScanFolderImages extends AppCompatActivity {
         long timeDiff = endMilliSec - startMilliSec;
         progressDialog.dismiss();
         Toast.makeText(ScanFolderImages.this, scannedImagesArrayList.size() + " images scanned in " + timeDiff + " milliseconds" + "\n" +obsceneImageList.size() + " obscene Images found", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "SetRecyclerView: End Time : " + System.currentTimeMillis());
+//        Log.d(TAG, "SetRecyclerView: End Time : " + System.currentTimeMillis());
     }
 
     public ArrayList<PictureFacer> getAllImagesByFolder(String path){
@@ -236,7 +237,7 @@ public class ScanFolderImages extends AppCompatActivity {
                 pic.setPicturePath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
                 pic.setPictureSize(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)));
                 images.add(pic);
-                Log.d(TAG, "getAllImagesByFolder: " + pic.toString());
+//                Log.d(TAG, "getAllImagesByFolder: " + pic.toString());
             }while(cursor.moveToNext());
             cursor.close();
             ArrayList<PictureFacer> reSelection = new ArrayList<>();

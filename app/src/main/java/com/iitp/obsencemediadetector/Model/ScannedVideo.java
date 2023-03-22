@@ -7,7 +7,7 @@ import org.checkerframework.checker.units.qual.A;
 import java.util.ArrayList;
 
 public class ScannedVideo {
-    private ArrayList<Bitmap> bitmapArrayList;
+    private ArrayList<String> bitmapArrayList;
     private float maxValue;
     private String fileName;
 
@@ -16,11 +16,11 @@ public class ScannedVideo {
         this.bitmapArrayList = new ArrayList<>();
     }
 
-    public ArrayList<Bitmap> getBitmapArrayList() {
+    public ArrayList<String> getBitmapArrayList() {
         return bitmapArrayList;
     }
 
-    public void setBitmapArrayList(ArrayList<Bitmap> bitmapArrayList) {
+    public void setBitmapArrayList(ArrayList<String> bitmapArrayList) {
         this.bitmapArrayList = bitmapArrayList;
     }
 

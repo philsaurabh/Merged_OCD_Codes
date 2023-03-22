@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.iitp.obsencemediadetector.Model.ScannedVideo;
 import com.iitp.obsencemediadetector.R;
 import com.iitp.obsencemediadetector.databinding.CartScannedFolderVideosBinding;
@@ -38,13 +39,15 @@ public class ScannedVideoAdapter extends RecyclerView.Adapter<ScannedVideoAdapte
         holder.binding.cartScannedFolderVideoName.setText(scannedVideo.getFileName());
         holder.binding.cartScannedFolderVideoValue.setText(scannedVideo.getMaxValue() + "");
 
-        if(scannedVideo.getBitmapArrayList().size()==1){
-            holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+        if (scannedVideo.getBitmapArrayList().size() == 1) {
+//                                    holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+            Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(0)).into(holder.binding.cartScannedFolderVideoImage1);
             holder.binding.cartScannedFolderVideoImage2.setVisibility(View.GONE);
-        }
-        else if(scannedVideo.getBitmapArrayList().size()==2){
-            holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
-            holder.binding.cartScannedFolderVideoImage2.setImageBitmap(scannedVideo.getBitmapArrayList().get(1));
+        } else if (scannedVideo.getBitmapArrayList().size() == 2) {
+            Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(0)).into(holder.binding.cartScannedFolderVideoImage1);
+            Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(1)).into(holder.binding.cartScannedFolderVideoImage2);
+//                                    holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+//                                    holder.binding.cartScannedFolderVideoImage2.setImageBitmap(scannedVideo.getBitmapArrayList().get(1));
         }
 
         int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;

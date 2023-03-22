@@ -60,7 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
-        android:text="Print"
+        android:text="0% completed"
+        android:enabled="false"
         android:textAllCaps="false" />
 
 </LinearLayout>

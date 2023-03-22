@@ -36,7 +36,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     private static final String TAG = "TagGalleryAdapter";
 
     public ImageGalleryAdapter(Context mContext, ArrayList<ImageFolder> imageFolderArrayList) {
-        Log.d(TAG, "GalleryAdapter: Const Called");
+//        Log.d(TAG, "GalleryAdapter: Const Called");
         this.mContext = mContext;
         this.imageFolderArrayList = imageFolderArrayList;
     }
@@ -44,7 +44,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: ");
+//        Log.d(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(mContext).inflate(R.layout.cart_gallery_folders, parent, false);
         return new ViewHolder(view);
     }
@@ -77,7 +77,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: Size: " + imageFolderArrayList.size());
+//        Log.d(TAG, "getItemCount: Size: " + imageFolderArrayList.size());
         return imageFolderArrayList.size();
     }
 
@@ -86,7 +86,7 @@ public class ImageGalleryAdapter extends RecyclerView.Adapter<ImageGalleryAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d(TAG, "ViewHolder: ");
+//            Log.d(TAG, "ViewHolder: ");
             binding = CartGalleryFoldersBinding.bind(itemView);
         }
     }

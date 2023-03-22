@@ -37,14 +37,14 @@ public class GalleryHiddenTesting extends AppCompatActivity {
         sortDirectory(ROOT_DIR);
 
         mAllMediaFolderList = (ArrayList<Folder>) Folder.findWithQuery(Folder.class, "Select * from Folder");
-        Log.d(TAG, "onCreate: AllMediaSize: " + mAllMediaFolderList.size());
+//        Log.d(TAG, "onCreate: AllMediaSize: " + mAllMediaFolderList.size());
         if (mAllMediaFolderList.size() != 0) {
             mUniqFolderList = new ArrayList<>();
             mUniqFolderList = getAllUniqueFolders(mAllMediaFolderList);
-            Log.d(TAG, "UniqueSize: " + String.valueOf(mUniqFolderList.size()));
+//            Log.d(TAG, "UniqueSize: " + String.valueOf(mUniqFolderList.size()));
 
             for (Folder folder : mUniqFolderList) {
-                Log.d(TAG, "Folder: " + folder.getFolderName() + " " + folder.getFileCount());
+//                Log.d(TAG, "Folder: " + folder.getFolderName() + " " + folder.getFileCount());
             }
         }
     }
@@ -66,7 +66,7 @@ public class GalleryHiddenTesting extends AppCompatActivity {
                         if (!hiddenImagesPath.contains(folder.getImagePath())) {
                             fileCount.put(folder.getFolderPath(), 1);
                             hiddenImagesPath.add(folder.getImagePath());
-                            Log.d(TAG, "fileCount: " +  folder.getImagePath());
+//                            Log.d(TAG, "fileCount: " +  folder.getImagePath());
                         }
                         folder.setFolderName(folder.getFolderName());
                         folder.setImagePath(folder.getImagePath());
@@ -76,7 +76,7 @@ public class GalleryHiddenTesting extends AppCompatActivity {
                     } else {
                         if (!hiddenImagesPath.contains(folder.getImagePath())) {
                             fileCount.put(folder.getFolderPath(), fileCount.get(folder.getFolderPath()) + 1);
-                            Log.d(TAG, "fileCount: " +  folder.getImagePath());
+//                            Log.d(TAG, "fileCount: " +  folder.getImagePath());
                             hiddenImagesPath.add(folder.getImagePath());
                         }
                     }
@@ -132,12 +132,12 @@ public class GalleryHiddenTesting extends AppCompatActivity {
             for (int i = 0; i < mFileLists.length; i++) {
                 if (mFileLists[i].isDirectory()) {
 
-                    Log.d("file length ", String.valueOf(mFileLists.length));
+//                    Log.d("file length ", String.valueOf(mFileLists.length));
                     mDirectoryList.add(mFileLists[i]);
                     if (mFileLists[i].getParent().contains("/storage/emulated/0/Download/New folder2/")) {
-                        Log.d("new folder getname ", new File(mFileLists[i].getParent()).getName());
-                        Log.d("new folder parent ", (mFileLists[i].getAbsolutePath()));
-                        Log.d("new folder absolute ", mFileLists[i].getAbsolutePath());
+//                        Log.d("new folder getname ", new File(mFileLists[i].getParent()).getName());
+//                        Log.d("new folder parent ", (mFileLists[i].getAbsolutePath()));
+//                        Log.d("new folder absolute ", mFileLists[i].getAbsolutePath());
                         Folder newfolder = new Folder();
                         newfolder.setFolderPath(mFileLists[i].getAbsolutePath());
                         newfolder.setFolderName(new File(mFileLists[i].getParent()).getName());
@@ -148,12 +148,12 @@ public class GalleryHiddenTesting extends AppCompatActivity {
                         if (newfile.isDirectory()) {
 
                             File[] mNewFolderContents = newfile.listFiles();
-                            Log.d("mNewFolderContents ", String.valueOf(mNewFolderContents.length));
+//                            Log.d("mNewFolderContents ", String.valueOf(mNewFolderContents.length));
                             for (int j = 0; j < mNewFolderContents.length; j++) {
-                                Log.d("absolute ", mNewFolderContents[j].getAbsolutePath());
+//                                Log.d("absolute ", mNewFolderContents[j].getAbsolutePath());
                                 newfolder.setImagePath(mNewFolderContents[j].getAbsolutePath());
-                                Log.d("new folder absolute ", mFileLists[i].getAbsolutePath());
-                                Log.d("new folder parent ", (mFileLists[i].getParent()));
+//                                Log.d("new folder absolute ", mFileLists[i].getAbsolutePath());
+//                                Log.d("new folder parent ", (mFileLists[i].getParent()));
 
                                 ArrayList<Folder> mFolderList1 = (ArrayList<Folder>) Folder.findWithQuery(Folder.class, "Select * from Folder where folder_path = " + DatabaseUtils.sqlEscapeString(mFileLists[i].getAbsolutePath()) + " and image_path = " + DatabaseUtils.sqlEscapeString(mNewFolderContents[j].getAbsolutePath()));
 

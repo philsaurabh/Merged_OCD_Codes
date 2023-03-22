@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,7 +17,9 @@ import com.iitp.obsencemediadetector.ml.Obscenetmquant;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +27,11 @@ import java.util.Comparator;
 public class MlModel {
 
     private static final String TAG = "TagMlModel";
+    public MediaMetadataRetriever retriever;
+
+    public MlModel() {
+        this.retriever = new MediaMetadataRetriever();
+    }
 
     public static float ProcessData(Context context, Bitmap bitmap) {
         try {
@@ -45,22 +54,32 @@ public class MlModel {
         }
     }
 
-    public static boolean isVideoObscene(Context context, Uri videoUri){
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+
+    public boolean isVideoObscene(Context context, Uri videoUri){
+        Log.d(TAG, "isVideoObscene: MediaMeta Done");
         String time = "0";
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
+            Log.d(TAG, "isVideoObscene: Time started");
             retriever.setDataSource(context, videoUri);
             time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+            Log.d(TAG, "isVideoObscene: Time fetched: " + time);
+
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "isVideoObscene: Error while time", e);
+            retriever.release();
+            return  false;
         }
 
         long DurationMilliSecond = 0;
         if (time != null) {
             DurationMilliSecond = Long.parseLong(time);
         }
-        Log.d(TAG, "isVideoObscene: Time: " + time);
-        Log.d(TAG, "isVideoObscene: Seconds: " + DurationMilliSecond);
+
+        Log.d(TAG, "isVideoObscene: Time: " + DurationMilliSecond);
 
         int looper = 0;
 
@@ -87,15 +106,17 @@ public class MlModel {
                 bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
                 float value = MlModel.ProcessData(context, bitmap);
                 if (value > 0.75) {
+                    retriever.release();
                     return true;
                 }
             }
             i += looper;
         }
+        retriever.release();
         return false;
     }
 
-    public static ScannedVideo processVideo(Context context, Uri videoUri) {
+    public ScannedVideo processVideo(Context context, Uri videoUri) {
         ScannedVideo scannedVideo = new ScannedVideo();
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         String time = "0";
@@ -104,27 +125,29 @@ public class MlModel {
             time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         } catch (Exception e) {
             e.printStackTrace();
+            retriever.release();
+            return null;
         }
 
         long DurationMilliSecond = 0;
         if (time != null) {
             DurationMilliSecond = Long.parseLong(time);
         }
-        Log.d(TAG, "onActivityResult: Time: " + time);
-        Log.d(TAG, "onActivityResult: Seconds: " + DurationMilliSecond);
+//        Log.d(TAG, "onActivityResult: Time: " + time);
+//        Log.d(TAG, "onActivityResult: Seconds: " + DurationMilliSecond);
 
         int looper = 0;
 
         if (DurationMilliSecond <= 120 * 1000) {
-            looper = 3 * 1000;
+            looper = 3 * 1000; // 20 frames per min
         } else if (DurationMilliSecond <= 600 * 1000) {
-            looper = 4 * 1000;
+            looper = 3 * 1000; // 20 frames per min
         } else if (DurationMilliSecond <= 1800 * 1000) {
-            looper = 15 * 1000;
+            looper = 4 * 1000; // 15 frames per min
         } else if (DurationMilliSecond <= 3600 * 1000) {
-            looper = 30 * 1000  ;
+            looper = 4 * 1000; // 15 frames per min
         } else {
-            looper = 60 * 1000;
+            looper = 6 * 1000; // 15 frames per min
         }
 
         long i = 0;
@@ -132,34 +155,49 @@ public class MlModel {
         boolean taskDone = false;
         ArrayList<BitmapValue> bitmapValues = new ArrayList<>();
 
+
         while (i < DurationMilliSecond) {
             // Setting Progress Dialog
 
-            Bitmap bitmap = retriever.getFrameAtTime(i * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
-            if (bitmap != null) {
-                bitmap = ImageResizer.reduceBitmapSize(bitmap, 240000);
-                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-                float value = MlModel.ProcessData(context, bitmap);
-                if (value > 0.75) {
-                    taskDone = true;
-                    if (value > higherReached) {
-                        higherReached = value;
-                        scannedVideo = new ScannedVideo();
-                        ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();
-                        bitmapArrayList.add(bitmap);
-                        scannedVideo.setBitmapArrayList(bitmapArrayList);
-                        scannedVideo.setMaxValue(value);
-                    }
-                } else if (value >= 0.5) {
-                    taskDone = true;
-                    if (higherReached == -1) {
-                        BitmapValue bitmapValue = new BitmapValue(bitmap, value);
-                        bitmapValues.add(bitmapValue);
-                        scannedVideo.setMaxValue(Math.max(scannedVideo.getMaxValue(), value));
+            try{
+                Bitmap bitmap = retriever.getFrameAtTime(i * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+                if (bitmap != null) {
+                    bitmap = ImageResizer.reduceBitmapSize(bitmap, 240000);
+                    bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                    float value = MlModel.ProcessData(context, bitmap);
+
+
+                    if (value > 0.75) {
+                        taskDone = true;
+                        if (value > higherReached) {
+                            higherReached = value;
+
+                            String bitUri = String.valueOf(AppUtils.Bitmap2Uri(context, bitmap));
+
+                            scannedVideo = new ScannedVideo();
+                            ArrayList<String> bitmapArrayList = new ArrayList<>();
+                            bitmapArrayList.add(bitUri);
+                            scannedVideo.setBitmapArrayList(bitmapArrayList);
+
+                            scannedVideo.setMaxValue(value);
+
+                        }
+                    } else if (value >= 0.5) {
+                        taskDone = true;
+                        if (higherReached == -1) {
+                            String bitUri = String.valueOf(AppUtils.Bitmap2Uri(context, bitmap));
+                            BitmapValue bitmapValue = new BitmapValue(bitUri, value);
+                            bitmapValues.add(bitmapValue);
+                            scannedVideo.setMaxValue(Math.max(scannedVideo.getMaxValue(), value));
+                        }
                     }
                 }
+            }catch (Exception err){
+                Log.d(TAG, "processVideo: Error: " + err);
             }
-            i += looper;
+            finally {
+                i += looper;
+            }
         }
 
         if(higherReached==-1){
@@ -170,7 +208,7 @@ public class MlModel {
                 }
             });
 
-            ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();
+            ArrayList<String> bitmapArrayList = new ArrayList<>();
             if(bitmapValues.size()>0) {
                 bitmapArrayList.add(bitmapValues.get(0).getBitmap());
             }
@@ -182,29 +220,31 @@ public class MlModel {
         }
 
         if(taskDone) {
+            retriever.release();
             return scannedVideo;
         }
         else{
+            retriever.release();
             return null;
         }
     }
 }
 
 class BitmapValue{
-    private Bitmap bitmap;
+    private String videoUri;
     private float value;
 
-    public BitmapValue(Bitmap bitmap, float value) {
-        this.bitmap = bitmap;
+    public BitmapValue(String videoUri, float value) {
+        this.videoUri = videoUri;
         this.value = value;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public String getBitmap() {
+        return videoUri;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public void setBitmap(String videoUri) {
+        this.videoUri = videoUri;
     }
 
     public float getValue() {

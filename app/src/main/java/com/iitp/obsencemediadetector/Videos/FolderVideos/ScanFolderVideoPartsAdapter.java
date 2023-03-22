@@ -1,10 +1,9 @@
 package com.iitp.obsencemediadetector.Videos.FolderVideos;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.iitp.obsencemediadetector.Model.ScannedVideo;
 import com.iitp.obsencemediadetector.Model.VideoFacer;
 import com.iitp.obsencemediadetector.R;
-import com.iitp.obsencemediadetector.Utils.BackgroundWork;
 import com.iitp.obsencemediadetector.Utils.MlModel;
 import com.iitp.obsencemediadetector.databinding.CartScannedFolderVideosBinding;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ScanFolderVideoPartsAdapter extends RecyclerView.Adapter<ScanFolderVideoPartsAdapter.ViewHolder> {
 
@@ -27,14 +28,13 @@ public class ScanFolderVideoPartsAdapter extends RecyclerView.Adapter<ScanFolder
     private Context mContext;
     private ArrayList<VideoFacer> videoFacerArrayList;
     private ScannedVideo[] scannedVideos;
+    protected ScanVideo scanVideo;
 
-    public ScanFolderVideoPartsAdapter(Context mContext, ArrayList<VideoFacer> videoFacerArrayList, ScannedVideo[] scannedVideos) {
+    public ScanFolderVideoPartsAdapter(Context mContext, ArrayList<VideoFacer> videoFacerArrayList, ScannedVideo[] scannedVideos, ScanVideo scanVideo) {
         this.mContext = mContext;
         this.videoFacerArrayList = videoFacerArrayList;
         this.scannedVideos = new ScannedVideo[videoFacerArrayList.size()];
-        for (int i = 0; i < videoFacerArrayList.size(); ++i) {
-            this.scannedVideos[i] = null;
-        }
+        this.scanVideo = scanVideo;
     }
 
     @NonNull
@@ -48,73 +48,89 @@ public class ScanFolderVideoPartsAdapter extends RecyclerView.Adapter<ScanFolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ScannedVideo scannedVideo = scannedVideos[position];
 
-        Log.d(TAG, "onBindViewHolder: Started: " + position + " @ " + System.currentTimeMillis());
-
         if (scannedVideo == null) {
             VideoFacer videoFacer = videoFacerArrayList.get(position);
             final ScannedVideo[] result = {null};
-            holder.binding.cartScannedFolderVideoProgressBar.setVisibility(View.VISIBLE);
 
+            holder.binding.cartScannedFolderVideoProgressBar.setVisibility(View.VISIBLE);
             holder.binding.cartScannedFolderVideoName.setText(videoFacer.getVideoName());
 
-            new BackgroundWork((Activity) mContext) {
+            Handler handler = new Handler(mContext.getMainLooper());
+
+            int pos = holder.getBindingAdapterPosition();
+
+            // Executor Code
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(new Runnable() {
                 @Override
-                public void doInBackground() {
-                    super.doInBackground();
+                public void run() {
                     String path = videoFacer.getVideoPath();
                     Uri videoUri = Uri.parse(path);
-                    result[0] = MlModel.processVideo(mContext, videoUri);
-                }
+                    MlModel mlModel = new MlModel();
+                    result[0] = mlModel.processVideo(mContext, videoUri);
 
-                @Override
-                public void onPostExecute() {
-                    super.onPostExecute();
-                    holder.binding.cartScannedFolderVideoProgressBar.setVisibility(View.GONE);
-                    if (result[0] != null) {
-                        Log.d(TAG, "onPostExecute: Not Null Result");
-                        result[0].setFileName(videoFacer.getVideoName());
-                        scannedVideos[holder.getAdapterPosition()] = result[0];
-                        ScannedVideo scannedVideo = result[0];
-                        holder.binding.cartScannedFolderVideoName.setText(scannedVideo.getFileName());
-                        holder.binding.cartScannedFolderVideoValue.setText(scannedVideo.getMaxValue() + "");
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            holder.binding.cartScannedFolderVideoProgressBar.setVisibility(View.GONE);
+                            scanVideo.scanDone(path);
+                            if (result[0] != null) {
+                                result[0].setFileName(videoFacer.getVideoName());
+                                scannedVideos[pos] = result[0];
+                                ScannedVideo scannedVideo = result[0];
+                                holder.binding.cartScannedFolderVideoName.setText(scannedVideo.getFileName());
+                                holder.binding.cartScannedFolderVideoValue.setText(scannedVideo.getMaxValue() + "");
 
-                        if (scannedVideo.getBitmapArrayList().size() == 1) {
-                            holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
-                            holder.binding.cartScannedFolderVideoImage2.setVisibility(View.GONE);
-                        } else if (scannedVideo.getBitmapArrayList().size() == 2) {
-                            holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
-                            holder.binding.cartScannedFolderVideoImage2.setImageBitmap(scannedVideo.getBitmapArrayList().get(1));
+                                if (scannedVideo.getBitmapArrayList().size() == 1) {
+//                                    holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+                                    Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(0)).into(holder.binding.cartScannedFolderVideoImage1);
+                                    holder.binding.cartScannedFolderVideoImage2.setVisibility(View.GONE);
+                                } else if (scannedVideo.getBitmapArrayList().size() == 2) {
+                                    Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(0)).into(holder.binding.cartScannedFolderVideoImage1);
+                                    Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(1)).into(holder.binding.cartScannedFolderVideoImage2);
+//                                    holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+//                                    holder.binding.cartScannedFolderVideoImage2.setImageBitmap(scannedVideo.getBitmapArrayList().get(1));
+                                }
+
+                                int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+                                holder.binding.cartScannedFolderVideoImage1.getLayoutParams().width = screenWidth / 3;
+                                holder.binding.cartScannedFolderVideoImage2.getLayoutParams().width = screenWidth / 3;
+                            } else {
+                                holder.itemView.setVisibility(View.GONE);
+                                holder.itemView.getLayoutParams().height = 0;
+                            }
                         }
+                    });
 
-                        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-                        holder.binding.cartScannedFolderVideoImage1.getLayoutParams().width = screenWidth / 3;
-                        holder.binding.cartScannedFolderVideoImage2.getLayoutParams().width = screenWidth / 3;
-
-                        Log.d(TAG, "onPostExecute: Pos: " + holder.getAbsoluteAdapterPosition() + "\nVideo: " + scannedVideo.toString());
-                    } else {
-                        Log.d(TAG, "onPostExecute: Null Result");
-                        holder.itemView.setVisibility(View.GONE);
-                    }
-                    Log.d(TAG, "onBindViewHolder: End Time: " + System.currentTimeMillis());
                 }
-            }.execute();
+            });
+            executorService.shutdown();
+
         } else {
             holder.binding.cartScannedFolderVideoProgressBar.setVisibility(View.GONE);
             holder.binding.cartScannedFolderVideoName.setText(scannedVideo.getFileName());
             holder.binding.cartScannedFolderVideoValue.setText(scannedVideo.getMaxValue() + "");
 
             if (scannedVideo.getBitmapArrayList().size() == 1) {
-                holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+//                                    holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+                Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(0)).into(holder.binding.cartScannedFolderVideoImage1);
                 holder.binding.cartScannedFolderVideoImage2.setVisibility(View.GONE);
             } else if (scannedVideo.getBitmapArrayList().size() == 2) {
-                holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
-                holder.binding.cartScannedFolderVideoImage2.setImageBitmap(scannedVideo.getBitmapArrayList().get(1));
+                Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(0)).into(holder.binding.cartScannedFolderVideoImage1);
+                Glide.with(mContext).load(scannedVideo.getBitmapArrayList().get(1)).into(holder.binding.cartScannedFolderVideoImage2);
+//                                    holder.binding.cartScannedFolderVideoImage1.setImageBitmap(scannedVideo.getBitmapArrayList().get(0));
+//                                    holder.binding.cartScannedFolderVideoImage2.setImageBitmap(scannedVideo.getBitmapArrayList().get(1));
             }
 
             int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
             holder.binding.cartScannedFolderVideoImage1.getLayoutParams().width = screenWidth / 3;
             holder.binding.cartScannedFolderVideoImage2.getLayoutParams().width = screenWidth / 3;
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
@@ -129,5 +145,9 @@ public class ScanFolderVideoPartsAdapter extends RecyclerView.Adapter<ScanFolder
             super(itemView);
             binding = CartScannedFolderVideosBinding.bind(itemView);
         }
+    }
+
+    public interface ScanVideo{
+        void scanDone(String videoUri);
     }
 }

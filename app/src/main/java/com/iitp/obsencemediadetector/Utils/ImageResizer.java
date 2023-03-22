@@ -17,7 +17,7 @@ public class ImageResizer {
             return bitmap;
         }
         double ratio = Math.sqrt(ratioSq);
-        Log.d("imageResizer", "ratio: "+ ratio);
+//        Log.d("imageResizer", "ratio: "+ ratio);
 
         int reqHeight = (int) Math.round(bitmapHeight/ratio);
         int reqWidth = (int) Math.round(bitmapWidth/ratio);

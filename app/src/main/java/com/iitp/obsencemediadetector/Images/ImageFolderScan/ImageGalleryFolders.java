@@ -34,7 +34,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_gallery_folders);
 
-        Log.d(TAG, "onCreate: Start: " + System.currentTimeMillis());
+//        Log.d(TAG, "onCreate: Start: " + System.currentTimeMillis());
 
         _init();
 
@@ -44,15 +44,15 @@ public class ImageGalleryFolders extends AppCompatActivity {
             public void doInBackground() {
                 super.doInBackground();
                 imageFolders = getFoldersList();
-                Log.d(TAG, "onCreate: Size: " + imageFolders.size());
+//                Log.d(TAG, "onCreate: Size: " + imageFolders.size());
             }
 
             @Override
             public void onPostExecute() {
                 super.onPostExecute();
-                Log.d(TAG, "onCreate: Photos Fetched: " + System.currentTimeMillis());
+//                Log.d(TAG, "onCreate: Photos Fetched: " + System.currentTimeMillis());
                 ImageGalleryAdapter adapter = new ImageGalleryAdapter(ImageGalleryFolders.this, imageFolders);
-                Log.d(TAG, "onCreate: Adapter Size: " + adapter.getItemCount());
+//                Log.d(TAG, "onCreate: Adapter Size: " + adapter.getItemCount());
                 recyclerView.setLayoutManager(new GridLayoutManager(ImageGalleryFolders.this, 3));
                 recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
@@ -89,7 +89,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
                 cursor.moveToNext();
             }
             else{
-                Log.d(TAG, "getFoldersList: Null cursor");
+//                Log.d(TAG, "getFoldersList: Null cursor");
             }
             do{
                 ImageFolder imageFolder = new ImageFolder();
@@ -100,17 +100,17 @@ public class ImageGalleryFolders extends AppCompatActivity {
                     folderName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
                     dataPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
 
-                    Log.d(TAG, "getFoldersList: Folder: " + folderName);
-                    Log.d(TAG, "getFoldersList: DataPath: " + dataPath);
+//                    Log.d(TAG, "getFoldersList: Folder: " + folderName);
+//                    Log.d(TAG, "getFoldersList: DataPath: " + dataPath);
 
                     if(dataPath.lastIndexOf(folderName + "/")<=0){
-                        Log.d(TAG, "getFoldersList: NegativePath: " + dataPath);
+//                        Log.d(TAG, "getFoldersList: NegativePath: " + dataPath);
                         continue;
                     }
 
                     String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
                     folderPaths +=  folderName + "/";
-                    Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
+//                    Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
 
                     if(!picPath.contains(folderPaths)){
                         picPath.add(folderPaths);
@@ -132,7 +132,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
 
                 }
                 else{
-                    Log.d(TAG, "getFoldersList: Cursor is Null");
+//                    Log.d(TAG, "getFoldersList: Cursor is Null");
                 }
             }while (cursor!=null && cursor.moveToNext());
             if(cursor!=null) {
@@ -144,7 +144,7 @@ public class ImageGalleryFolders extends AppCompatActivity {
         }
 
         for (int i = 0; i < foldersList.size(); i++) {
-            Log.d(TAG, foldersList.get(i).getFolderName() + " and path = " + foldersList.get(i).getPath() + " " + foldersList.get(i).getNumberOfPics());
+//            Log.d(TAG, foldersList.get(i).getFolderName() + " and path = " + foldersList.get(i).getPath() + " " + foldersList.get(i).getNumberOfPics());
         }
 
         return foldersList;

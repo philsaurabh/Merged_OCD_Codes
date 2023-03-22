@@ -38,9 +38,12 @@ import com.iitp.obsencemediadetector.Utils.FetchIMEI;
 import com.iitp.obsencemediadetector.Utils.MlModel;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ScanFolderVideos extends AppCompatActivity {
 
@@ -65,7 +68,7 @@ public class ScanFolderVideos extends AppCompatActivity {
         _init();
 
         Intent intent = getIntent();
-        if(intent==null || !intent.hasExtra("VideoGson")){
+        if (intent == null || !intent.hasExtra("VideoGson")) {
             return;
         }
 
@@ -79,8 +82,59 @@ public class ScanFolderVideos extends AppCompatActivity {
         videoFolder = new Gson().fromJson(intent.getStringExtra("VideoGson"), VideoFolder.class);
         SetHeaderData();
 
-        Log.d(TAG, "onCreate: Start Time: " + startTime);
+//        Log.d(TAG, "onCreate: Start Time: " + startTime);
 
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+
+                videoArrayList = getVideosByFolder(videoFolder.getPath());
+                ScannedVideo[] scannedVideos = new ScannedVideo[videoArrayList.size()];
+                for (int i = 0; i < videoArrayList.size(); ++i) {
+                    scannedVideos[i] = null;
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayList<String> countList = new ArrayList<>();
+                        int total = videoArrayList.size();
+
+                        adapter = new ScanFolderVideoPartsAdapter(ScanFolderVideos.this, videoArrayList, scannedVideos, new ScanFolderVideoPartsAdapter.ScanVideo() {
+                            @Override
+                            public void scanDone(String videoUri) {
+                                if(!countList.contains(videoUri)){
+                                    countList.add(videoUri);
+                                }
+                                int count = countList.size();
+
+                                if(count>=total){
+                                    printButton.setText("Print");
+                                    printButton.setEnabled(true);
+                                }
+                                else{
+                                    float progress = 100*count;
+                                    progress /= total;
+                                    DecimalFormat df = new DecimalFormat();
+                                    df.setMaximumFractionDigits(2);
+
+
+                                    printButton.setText(df.format(progress) + "% completed");
+                                }
+
+                            }
+                        });
+
+                        recyclerView.setLayoutManager(new LinearLayoutManager(ScanFolderVideos.this));
+                        recyclerView.setAdapter(adapter);
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+        });
+        executorService.shutdown();
+/*
         new BackgroundWork(this){
             @Override
             public void doInBackground() {
@@ -97,13 +151,12 @@ public class ScanFolderVideos extends AppCompatActivity {
             @Override
             public void onPostExecute() {
                 super.onPostExecute();
-//                SetFetchedData();
-                Log.d(TAG, "onPostExecute: End Time: " + System.currentTimeMillis());
                 recyclerView.setLayoutManager(new LinearLayoutManager(ScanFolderVideos.this));
                 recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
             }
         }.execute();
+*/
 
         printButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,15 +207,14 @@ public class ScanFolderVideos extends AppCompatActivity {
     }
 
     private void SetHeaderData() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             String imeiNum = FetchIMEI.getIMEI(this);
-            if(imeiNum.trim().isEmpty()){
+            if (imeiNum.trim().isEmpty()) {
                 String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
                 imei.setText("Android Id: " + ANDROID_ID);
             }
             imei.setText("IMEI: " + imeiNum);
-        }
-        else{
+        } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PHONE_STATE_REQUEST);
         }
         DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
@@ -182,27 +234,26 @@ public class ScanFolderVideos extends AppCompatActivity {
 
         Cursor cursor = getContentResolver().query(allVideosUri, projection, MediaStore.Video.Media.DATA + " like ? ", new String[]{"%" + path + "%"}, null);
 
-        try{
-            if(cursor!=null){
+        try {
+            if (cursor != null) {
                 cursor.moveToNext();
             }
-            do{
+            do {
                 VideoFacer video = new VideoFacer();
                 video.setVideoName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)));
                 video.setVideoPath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
                 video.setVideoSize(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)));
                 videoArrayList.add(video);
-            }while (cursor.moveToNext());
-        }catch (Exception e){
+            } while (cursor.moveToNext());
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(ScanFolderVideos.this, "Err: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        finally {
+        } finally {
             cursor.close();
         }
 
         ArrayList<VideoFacer> reSelection = new ArrayList<>();
-        for(int i=videoArrayList.size()-1; i>=0; --i){
+        for (int i = videoArrayList.size() - 1; i >= 0; --i) {
             reSelection.add(videoArrayList.get(i));
         }
         videoArrayList = reSelection;
@@ -211,7 +262,7 @@ public class ScanFolderVideos extends AppCompatActivity {
 
     private void SetFetchedData() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if(scannedVideosArrayList.size()==0){
+        if (scannedVideosArrayList.size() == 0) {
             progressDialog.dismiss();
             Toast.makeText(ScanFolderVideos.this, "No Obscene Media detected!!", Toast.LENGTH_SHORT).show();
             return;
@@ -225,15 +276,16 @@ public class ScanFolderVideos extends AppCompatActivity {
         scannedVideosArrayList = new ArrayList<>();
         int totalSize = videoArrayList.size();
         int count = 0;
-        for(VideoFacer videoFacer : videoArrayList){
-            int progess = count*100;
-            progess/= totalSize;
+        for (VideoFacer videoFacer : videoArrayList) {
+            int progess = count * 100;
+            progess /= totalSize;
             count++;
             progressDialog.setMessage("Please wait... " + progess + "%");
             String path = videoFacer.getVideoPath();
             Uri videoUri = Uri.parse(path);
-            ScannedVideo result = MlModel.processVideo(this, videoUri);
-            if(result!=null){
+            MlModel mlModel = new MlModel();
+            ScannedVideo result = mlModel.processVideo(this, videoUri);
+            if (result != null) {
                 result.setFileName(videoFacer.getVideoName());
                 scannedVideosArrayList.add(result);
             }
@@ -243,7 +295,7 @@ public class ScanFolderVideos extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK && requestCode == PHONE_STATE_REQUEST){
+        if (resultCode == RESULT_OK && requestCode == PHONE_STATE_REQUEST) {
             SetHeaderData();
         }
     }

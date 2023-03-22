@@ -23,6 +23,8 @@ import com.iitp.obsencemediadetector.Utils.BackgroundWork;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VideoGalleryFolders extends AppCompatActivity {
 
@@ -39,6 +41,26 @@ public class VideoGalleryFolders extends AppCompatActivity {
         progressBar = findViewById(R.id.video_gallery_folder_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                videoFolderArrayList =  getGalleryVideosFolder();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        VideoGalleryAdapter adapter = new VideoGalleryAdapter(VideoGalleryFolders.this, videoFolderArrayList);
+                        recyclerView.setLayoutManager(new GridLayoutManager(VideoGalleryFolders.this, 3));
+                        recyclerView.setAdapter(adapter);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+        executorService.shutdown();
+
+/*
         new BackgroundWork(this){
             @Override
             public void doInBackground() {
@@ -55,6 +77,7 @@ public class VideoGalleryFolders extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         }.execute();
+*/
     }
 
     private ArrayList<VideoFolder> getGalleryVideosFolder() {
@@ -82,17 +105,21 @@ public class VideoGalleryFolders extends AppCompatActivity {
                 if(dataPath.lastIndexOf(folderName + "/")<=0) {
                     continue;
                 }
+
                 String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
                 folderPaths += folderName + "/";
-                Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
+//                Log.d(TAG, "getFoldersList: FolderPath: " + folderPaths);
 
                 if (!videoPath.contains(folderPaths)) {
                     videoPath.add(folderPaths);
 
                     VideoFolder videoFolder = new VideoFolder();
                     videoFolder.setFolderName(folderName);
-                    Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
-                    videoFolder.setFirstVideo(firstThumb);
+
+//                    Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
+//                    videoFolder.setFirstVideo(firstThumb);
+                    videoFolder.setFirstVideo(dataPath);
+
                     videoFolder.addVideo();
                     videoFolder.setPath(folderPaths);
 
@@ -102,8 +129,9 @@ public class VideoGalleryFolders extends AppCompatActivity {
                     for(int i=0; i<videoFolderArrayList.size(); ++i){
                         if(videoFolderArrayList.get(i).getPath().equals(folderPaths)){
                             videoFolderArrayList.get(i).addVideo();
-                            Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
-                            videoFolderArrayList.get(i).setFirstVideo(firstThumb);
+//                            Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
+//                            videoFolderArrayList.get(i).setFirstVideo(firstThumb);
+                            videoFolderArrayList.get(i).setFirstVideo(dataPath);
                         }
                     }
                 }

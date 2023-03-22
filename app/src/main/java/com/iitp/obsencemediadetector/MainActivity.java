@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void GetVideo() {
-        Log.d(TAG, "GetImage: ");
+//        Log.d(TAG, "GetImage: ");
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void GetImage() {
-        Log.d(TAG, "GetImage: ");
+//        Log.d(TAG, "GetImage: ");
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);

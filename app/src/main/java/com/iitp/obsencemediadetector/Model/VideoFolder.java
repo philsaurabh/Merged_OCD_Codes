@@ -6,7 +6,7 @@ public class VideoFolder {
     private String path;
     private String folderName;
     private long numOfVideos = 0;
-    private Bitmap firstVideo;
+    private String firstVideo;
 
     public VideoFolder() {
     }
@@ -35,11 +35,11 @@ public class VideoFolder {
         this.numOfVideos = numOfVideos;
     }
 
-    public Bitmap getFirstVideo() {
+    public String getFirstVideo() {
         return firstVideo;
     }
 
-    public void setFirstVideo(Bitmap firstVideo) {
+    public void setFirstVideo(String firstVideo) {
         this.firstVideo = firstVideo;
     }
 

@@ -35,9 +35,12 @@ import com.iitp.obsencemediadetector.Utils.BackgroundWork;
 import com.iitp.obsencemediadetector.Utils.FetchIMEI;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CheckFolderVideos extends AppCompatActivity {
 
@@ -59,7 +62,7 @@ public class CheckFolderVideos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_folder_videos);
 
-        Log.d(TAG, "onCreate: Start Time: " + System.currentTimeMillis());
+//        Log.d(TAG, "onCreate: Start Time: " + System.currentTimeMillis());
 
         _init();
 
@@ -67,6 +70,8 @@ public class CheckFolderVideos extends AppCompatActivity {
         if (intent == null || !intent.hasExtra("VideoGson")) {
             return;
         }
+
+        printButton.setEnabled(false);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Processing Folder");
@@ -76,31 +81,49 @@ public class CheckFolderVideos extends AppCompatActivity {
         startTime = System.currentTimeMillis();
         videoFolder = new Gson().fromJson(intent.getStringExtra("VideoGson"), VideoFolder.class);
         SetHeaderData();
+        recyclerView.setLayoutManager(new LinearLayoutManager(CheckFolderVideos.this));
 
-        new BackgroundWork(this) {
-            @Override
-            public void doInBackground() {
-                super.doInBackground();
-                videoArrayList = getVideosByFolder(videoFolder.getPath());
-                adapter = new CheckFolderVideoAdapter(CheckFolderVideos.this, videoArrayList);
-            }
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> {
+            videoArrayList = getVideosByFolder(videoFolder.getPath());
 
-            @Override
-            public void onPostExecute() {
-                super.onPostExecute();
-                recyclerView.setLayoutManager(new LinearLayoutManager(CheckFolderVideos.this));
+            runOnUiThread(() -> {
+
+                final int[] count = {0};
+                ArrayList<String> countList = new ArrayList<>();
+                int total = videoArrayList.size();
+
+                adapter = new CheckFolderVideoAdapter(CheckFolderVideos.this, videoArrayList, new CheckFolderVideoAdapter.ScanVideo() {
+                    @Override
+                    public void scanDone(String videoUri) {
+                        if(!countList.contains(videoUri)){
+                            countList.add(videoUri);
+                        }
+                        count[0] = countList.size();
+
+                        if(count[0]>=total){
+                            printButton.setText("Print");
+                            printButton.setEnabled(true);
+                        }
+                        else{
+                            float progress = 100*count[0];
+                            progress /= total;
+                            DecimalFormat df = new DecimalFormat();
+                            df.setMaximumFractionDigits(2);
+
+
+                            printButton.setText(df.format(progress) + "% completed");
+                        }
+                    }
+
+                });
                 recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
-                Log.d(TAG, "onPostExecute: End time: " + System.currentTimeMillis());
-            }
-        }.execute();
-
-        printButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PrintPage();
-            }
+            });
         });
+        executorService.shutdown();
+
+        printButton.setOnClickListener(view -> PrintPage());
     }
 
     private void SetHeaderData() {
@@ -196,5 +219,4 @@ public class CheckFolderVideos extends AppCompatActivity {
         videoArrayList = reSelection;
         return videoArrayList;
     }
-
 }

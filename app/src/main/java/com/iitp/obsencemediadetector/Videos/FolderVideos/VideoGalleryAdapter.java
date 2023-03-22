@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.iitp.obsencemediadetector.Images.ImageFolderScan.ScanFolderImages;
 import com.iitp.obsencemediadetector.Model.VideoFolder;
@@ -40,7 +41,8 @@ public class VideoGalleryAdapter extends RecyclerView.Adapter<VideoGalleryAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         VideoFolder videoFolder = videoFolderArrayList.get(position);
 
-        holder.binding.cartGalleryFolderImage.setImageBitmap(videoFolder.getFirstVideo());
+//        holder.binding.cartGalleryFolderImage.setImageBitmap(videoFolder.getFirstVideo());
+        Glide.with(mContext).load(videoFolder.getFirstVideo()).into(holder.binding.cartGalleryFolderImage);
         holder.binding.cartGalleryFolderName.setText(videoFolder.getNumOfVideos() + " " + videoFolder.getFolderName());
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
         holder.binding.cartGalleryFolderImage.getLayoutParams().width = width / 3;

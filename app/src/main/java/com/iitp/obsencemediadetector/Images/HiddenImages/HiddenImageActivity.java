@@ -48,7 +48,7 @@ public class HiddenImageActivity extends AppCompatActivity {
                     @Override
                     public void onPostExecute() {
                         super.onPostExecute();
-                        Log.d(TAG, "onPostExecute: Size: " + hiddenFiles.size());
+//                        Log.d(TAG, "onPostExecute: Size: " + hiddenFiles.size());
                         PrintFileList();
                         progressDialog.dismiss();
                     }
@@ -59,7 +59,7 @@ public class HiddenImageActivity extends AppCompatActivity {
 
     private void PrintFileList() {
         for(CustomFile customFile : hiddenFiles){
-            Log.d(TAG, "File: " + customFile.toString());
+//            Log.d(TAG, "File: " + customFile.toString());
         }
     }
 

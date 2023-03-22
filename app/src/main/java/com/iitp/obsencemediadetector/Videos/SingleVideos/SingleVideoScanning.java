@@ -39,7 +39,7 @@ public class SingleVideoScanning extends AppCompatActivity {
         setContentView(R.layout.activity_single_video_testing);
         start = System.currentTimeMillis();
 
-        Log.d(TAG, "onCreate: Start time: " + start);
+//        Log.d(TAG, "onCreate: Start time: " + start);
 
         recyclerView = findViewById(R.id.video_testing_rcv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -72,7 +72,7 @@ public class SingleVideoScanning extends AppCompatActivity {
     }
 
     private void SetData() {
-        Log.d(TAG, "GetObsceneResult SetData: Size: " + scannedVideoImagesArrayList.size());
+//        Log.d(TAG, "GetObsceneResult SetData: Size: " + scannedVideoImagesArrayList.size());
         if (scannedVideoImagesArrayList.size() == 0) {
             Toast.makeText(SingleVideoScanning.this, "No Obscenity detected in the video", Toast.LENGTH_SHORT).show();
         } else {
@@ -81,7 +81,7 @@ public class SingleVideoScanning extends AppCompatActivity {
         }
         long end = System.currentTimeMillis();
         long duration = end - start;
-        Log.d(TAG, "GetObsceneResult SetData: Time taken: " + duration);
+//        Log.d(TAG, "GetObsceneResult SetData: Time taken: " + duration);
         progressDialog.dismiss();
     }
 
@@ -100,8 +100,8 @@ public class SingleVideoScanning extends AppCompatActivity {
         if (time != null) {
             DurationMilliSecond = Long.parseLong(time);
         }
-        Log.d(TAG, "onActivityResult: Time: " + time);
-        Log.d(TAG, "onActivityResult: Seconds: " + DurationMilliSecond);
+//        Log.d(TAG, "onActivityResult: Time: " + time);
+//        Log.d(TAG, "onActivityResult: Seconds: " + DurationMilliSecond);
 
         int looper = 0;
 
@@ -117,7 +117,7 @@ public class SingleVideoScanning extends AppCompatActivity {
             looper = 60 * 1000;
         }
 
-        Log.d(TAG, "GetObsceneResult: Model Start time: " + System.currentTimeMillis());
+//        Log.d(TAG, "GetObsceneResult: Model Start time: " + System.currentTimeMillis());
 
         long i = 0;
         scannedVideoImagesArrayList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class SingleVideoScanning extends AppCompatActivity {
                 bitmap = ImageResizer.reduceBitmapSize(bitmap, 240000);
                 bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
                 float value = MlModel.ProcessData(this, bitmap);
-                Log.d(TAG, "GetObsceneResult: Val: " + value);
+//                Log.d(TAG, "GetObsceneResult: Val: " + value);
                 int progress = (int) (100*i);
                 progress = (int) (progress/DurationMilliSecond);
                 progressDialog.setMessage("Please wait... " + progress + "%");

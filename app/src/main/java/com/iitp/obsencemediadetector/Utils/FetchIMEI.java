@@ -19,12 +19,12 @@ public class FetchIMEI {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (tm!=null) {
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    return "No";
+                    return "";
                 }
 
                 deviceUniqueIdentifier = tm.getDeviceId();
                 if (deviceUniqueIdentifier == null || deviceUniqueIdentifier.length()==0)
-                    deviceUniqueIdentifier = "Null";
+                    deviceUniqueIdentifier = "";
             }
             return deviceUniqueIdentifier;
         }  catch (Exception e){

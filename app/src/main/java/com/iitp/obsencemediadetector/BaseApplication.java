@@ -10,6 +10,6 @@ public class BaseApplication extends SugarApp {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate: Created");
+//        Log.d(TAG, "onCreate: Created");
     }
 }

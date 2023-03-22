@@ -21,6 +21,8 @@ import com.iitp.obsencemediadetector.Videos.FolderVideos.VideoGalleryAdapter;
 import com.iitp.obsencemediadetector.Videos.FolderVideos.VideoGalleryFolders;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CheckVideoGalleryFolders extends AppCompatActivity {
 
@@ -34,12 +36,31 @@ public class CheckVideoGalleryFolders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_video_gallery_folders);
 
-        Log.d(TAG, "onCreate: StartTime: " + System.currentTimeMillis());
+//        Log.d(TAG, "onCreate: StartTime: " + System.currentTimeMillis());
 
         recyclerView = findViewById(R.id.check_video_gallery_folder_rcv);
         progressBar = findViewById(R.id.check_video_gallery_folder_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                videoFolderArrayList = getGalleryVideosFolder();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CheckVideoGalleryAdapter adapter = new CheckVideoGalleryAdapter(CheckVideoGalleryFolders.this, videoFolderArrayList);
+                        recyclerView.setLayoutManager(new GridLayoutManager(CheckVideoGalleryFolders.this, 3));
+                        recyclerView.setAdapter(adapter);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+        executorService.shutdown();
+/*
         new BackgroundWork(this){
             @Override
             public void doInBackground() {
@@ -54,9 +75,10 @@ public class CheckVideoGalleryFolders extends AppCompatActivity {
                 recyclerView.setLayoutManager(new GridLayoutManager(CheckVideoGalleryFolders.this, 3));
                 recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
-                Log.d(TAG, "onPostExecute: End time: " + System.currentTimeMillis());
+//                Log.d(TAG, "onPostExecute: End time: " + System.currentTimeMillis());
             }
         }.execute();
+*/
     }
 
     private ArrayList<VideoFolder> getGalleryVideosFolder() {
@@ -81,7 +103,7 @@ public class CheckVideoGalleryFolders extends AppCompatActivity {
             do {
                 String folderName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
                 String dataPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-                if(dataPath.lastIndexOf(folderName + "/")<=0) {
+                if (dataPath.lastIndexOf(folderName + "/") <= 0) {
                     continue;
                 }
                 String folderPaths = dataPath.substring(0, dataPath.lastIndexOf(folderName + "/"));
@@ -92,19 +114,21 @@ public class CheckVideoGalleryFolders extends AppCompatActivity {
 
                     VideoFolder videoFolder = new VideoFolder();
                     videoFolder.setFolderName(folderName);
-                    Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
-                    videoFolder.setFirstVideo(firstThumb);
+
+//                    Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
+                    videoFolder.setFirstVideo(dataPath);
+
                     videoFolder.addVideo();
                     videoFolder.setPath(folderPaths);
 
                     videoFolderArrayList.add(videoFolder);
-                }
-                else{
-                    for(int i=0; i<videoFolderArrayList.size(); ++i){
-                        if(videoFolderArrayList.get(i).getPath().equals(folderPaths)){
+                } else {
+                    for (int i = 0; i < videoFolderArrayList.size(); ++i) {
+                        if (videoFolderArrayList.get(i).getPath().equals(folderPaths)) {
                             videoFolderArrayList.get(i).addVideo();
-                            Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
-                            videoFolderArrayList.get(i).setFirstVideo(firstThumb);
+//                            Bitmap firstThumb = ThumbnailUtils.createVideoThumbnail(dataPath, MediaStore.Images.Thumbnails.MINI_KIND);
+//                            videoFolderArrayList.get(i).setFirstVideo(firstThumb);
+                            videoFolderArrayList.get(i).setFirstVideo(dataPath);
                         }
                     }
                 }
