@@ -1,12 +1,9 @@
 package com.iitp.obsencemediadetector.Utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,9 +14,7 @@ import com.iitp.obsencemediadetector.ml.Obscenetmquant;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -139,15 +134,15 @@ public class MlModel {
         int looper = 0;
 
         if (DurationMilliSecond <= 120 * 1000) {
-            looper = 3 * 1000; // 20 frames per min
+            looper = 1 * 1000; // 60 frames per min
         } else if (DurationMilliSecond <= 600 * 1000) {
-            looper = 3 * 1000; // 20 frames per min
+            looper = 1 * 1000; // 60 frames per min
         } else if (DurationMilliSecond <= 1800 * 1000) {
-            looper = 4 * 1000; // 15 frames per min
+            looper = 2 * 1000; // 30 frames per min
         } else if (DurationMilliSecond <= 3600 * 1000) {
-            looper = 4 * 1000; // 15 frames per min
+            looper = 2 * 1000; // 30 frames per min
         } else {
-            looper = 6 * 1000; // 15 frames per min
+            looper = 3 * 1000; // 20 frames per min
         }
 
         long i = 0;

@@ -8,6 +8,7 @@
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/drawable/ic_baseline_video_library_24.xml" value="0.2" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/drawable/ic_round_image_search_24.xml" value="0.2" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/font/insomni_font.xml" value="0.1861544955677501" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_check_folder_videos.xml" value="0.225" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_check_video_gallery_folders.xml" value="0.225" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_gallery_folders.xml" value="0.13" />
@@ -18,7 +19,7 @@
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_scan_folder_videos.xml" value="0.225" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_single_image_scan.xml" value="0.18" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_single_video_testing.xml" value="0.1" />
-        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_splash.xml" value="0.16374519025224454" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_splash.xml" value="0.22" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/activity_video_gallery_folders.xml" value="0.225" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/cart_check_video.xml" value="0.225" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/ObsenceMediaDetector/app/src/main/res/layout/cart_gallery_folders.xml" value="0.18" />

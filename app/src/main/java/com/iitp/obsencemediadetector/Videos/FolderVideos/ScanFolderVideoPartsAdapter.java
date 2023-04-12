@@ -30,10 +30,10 @@ public class ScanFolderVideoPartsAdapter extends RecyclerView.Adapter<ScanFolder
     private ScannedVideo[] scannedVideos;
     protected ScanVideo scanVideo;
 
-    public ScanFolderVideoPartsAdapter(Context mContext, ArrayList<VideoFacer> videoFacerArrayList, ScannedVideo[] scannedVideos, ScanVideo scanVideo) {
+    public ScanFolderVideoPartsAdapter(Context mContext, ArrayList<VideoFacer> videoFacerArrayList, int size, ScanVideo scanVideo) {
         this.mContext = mContext;
         this.videoFacerArrayList = videoFacerArrayList;
-        this.scannedVideos = new ScannedVideo[videoFacerArrayList.size()];
+        this.scannedVideos = new ScannedVideo[size];
         this.scanVideo = scanVideo;
     }
 

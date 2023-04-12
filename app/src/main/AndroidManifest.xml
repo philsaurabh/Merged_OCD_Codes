@@ -11,11 +11,12 @@
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/app_logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_logo"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.ObsenceMediaDetector">
+
 
         <meta-data
             android:name="DATABASE"
@@ -62,13 +63,12 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:exported="true"/>
-
+            android:exported="true"
+            android:label="@string/app_name" />
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

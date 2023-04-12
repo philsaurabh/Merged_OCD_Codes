@@ -90,10 +90,7 @@ public class ScanFolderVideos extends AppCompatActivity {
             public void run() {
 
                 videoArrayList = getVideosByFolder(videoFolder.getPath());
-                ScannedVideo[] scannedVideos = new ScannedVideo[videoArrayList.size()];
-                for (int i = 0; i < videoArrayList.size(); ++i) {
-                    scannedVideos[i] = null;
-                }
+
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -101,7 +98,7 @@ public class ScanFolderVideos extends AppCompatActivity {
                         ArrayList<String> countList = new ArrayList<>();
                         int total = videoArrayList.size();
 
-                        adapter = new ScanFolderVideoPartsAdapter(ScanFolderVideos.this, videoArrayList, scannedVideos, new ScanFolderVideoPartsAdapter.ScanVideo() {
+                        adapter = new ScanFolderVideoPartsAdapter(ScanFolderVideos.this, videoArrayList, total, new ScanFolderVideoPartsAdapter.ScanVideo() {
                             @Override
                             public void scanDone(String videoUri) {
                                 if(!countList.contains(videoUri)){

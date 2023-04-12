@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="red">#F80202</color>
+    <color name="splash_text">#232091</color>
 </resources>
